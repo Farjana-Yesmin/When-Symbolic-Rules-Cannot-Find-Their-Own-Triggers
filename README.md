@@ -1,144 +1,180 @@
 # RuleNet
-# Joint Denoising and 3D Point Cloud Reconstruction from Single Medical Images
+# RuleNet: Rule-Augmented Neural Networks for Trustworthy Decision-Making
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-red.svg)](https://pytorch.org/)
+![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
+![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-red)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-A preliminary joint learning framework for simultaneous medical image denoising and 3D point cloud reconstruction from single noisy images.
+A novel neuro-symbolic AI framework that integrates Datalog rules with deep neural networks to enhance explainability and trustworthiness in high-stakes decision-making domains like healthcare and finance.
 
-## 📋 Overview
+## 📖 Abstract
 
-This repository contains the implementation of a compact two-branch neural network that performs **joint denoising and 3D reconstruction** from single medical images. The model learns shared intermediate representations to efficiently handle both tasks within a single network, offering a resource-efficient alternative to sequential pipelines.
+Deep neural networks excel in predictive tasks but lack interpretability, hindering adoption in critical domains. RuleNet bridges symbolic logic and deep learning by augmenting DNNs with Datalog rules via predicate grounding and semantic loss. This ensures predictions align with domain constraints while maintaining predictive power, providing human-readable explanations for trustworthy AI.
 
-**Key Features:**
-- 🏗️ Two-branch architecture with shared representations
-- 🔄 Simultaneous image denoising and 3D point cloud reconstruction
-- 💡 Designed for resource-constrained environments (Google Colab compatible)
-- 🧪 Proof-of-concept implementation with synthetic data
+## 🚀 Key Features
 
-## 🚀 Quick Start
+- **Neuro-Symbolic Integration**: Combines DNN flexibility with symbolic rule reasoning
+- **Explainable Predictions**: Human-readable rule-based explanations
+- **High-Stakes Domain Ready**: Validated on healthcare (MIMIC-III) and finance (Fraud-D) datasets
+- **Efficient Inference**: ~4.5ms per prediction with 100% rule coverage
+- **Scalable Architecture**: Lightweight rule augmentation without computational bottlenecks
 
-### Prerequisites
+## 📊 Performance Highlights
 
+| Model | Accuracy | F1-Score | Rule Coverage | Inference Time |
+|-------|----------|----------|---------------|----------------|
+| MLP | 84.65% | 0.2878 | 0% | 5.2ms |
+| CNN | 84.62% | 0.2764 | 0% | 7.8ms |
+| **RuleNet** | **84.75%** | **0.2996** | **100%** | **4.5ms** |
 
-pip install torch torchvision transformers numpy matplotlib scipy scikit-learn plyfile SimpleITK
+## 🏗️ Architecture
 
-Usage
-
-Clone the repository:
-
-git clone https://github.com/farjana-yesmin/joint-denoising-3dreconstruction.git
-cd joint-denoising-3dreconstruction
-Run the Jupyter notebook:
-
-jupyter notebook Joint_Denoising_and_3D_Point_Cloud_Reconstruction_from_Single_Medical_Images.ipynb
-Or execute directly in Google Colab:
-
-Upload the notebook to Google Colab
-Ensure GPU runtime is selected (Runtime → Change runtime type → GPU)
-
-🏗️ Model Architecture
-
-The model employs a dual-branch architecture:
-
-Denoising Branch: Convolutional layers with batch normalization and dropout (0.3)
-Reconstruction Branch: Linear layer projecting to 1000 3D point coordinates
-Shared Representations: Intermediate features shared between both tasks
-text
-Input (128×128) → Shared Encoder → [Denoising Head | Reconstruction Head]
-Loss Function
-
-The total loss combines pixel-level and geometric constraints:
+### RuleNet Framework
 
 
-L_total = λ_denoise · L_MSE + λ_recon · L_Chamfer
-where λ_denoise = 1.0, λ_recon = 1.0
-
-📊 Results
-
-Quantitative Performance (Synthetic Data)
-
-Metric	Sequential Baseline	Joint Framework
-PSNR (dB)	10.00 ± 0.50	10.00 ± 0.50
-Chamfer Distance	0.1086 ± 0.0050	0.0535 ± 0.0050
-SSIM	0.4601 ± 0.0100	0.3370 ± 0.0100
-Qualitative Results
-
-denoising_comparison.png
-point_cloud.png
-
-🗂️ Dataset
-
-Intended Dataset: LIDC-IDRI (Lung Image Database Consortium)
-
-Status: Limited access in current implementation
-Current Solution: Synthetic noisy 2D slices with Gaussian noise (σ=0.1)
-Preprocessing: Images resized to 128×128, point clouds normalized to [-1,1]
-Data Split: 70% training, 20% validation, 10% testing
-
-⚙️ Training Configuration
+Input Features → DNN Backbone → Predicate Grounding → Rule Satisfaction → Hybrid Prediction
+↓ ↓ ↓
+Data Learning + Symbolic Reasoning + Explainable Output
 
 
-# Hyperparameters
-learning_rate = 1e-5
-batch_size = 1 (with gradient accumulation over 4 steps)
-epochs = 50
-optimizer = Adam
-loss_weights = [1.0, 1.0]  # denoising, reconstruction
+### Key Components
+- **DNN Backbone**: Multi-layer perceptron for feature learning
+- **Predicate Grounding**: Maps features to logical predicates
+- **Semantic Loss**: Balances data fitting and rule adherence
+- **Rule Engine**: Datalog-based constraint enforcement
 
-Hardware Requirements:
+## 📥 Installation
 
-Minimum: Google Colab T4 GPU (fallback to CPU supported)
-Recommended: GPU with ≥8GB VRAM for full LIDC-IDRI experiments
+
+# Clone repository
+git clone https://github.com/Farjana-Yesmin/RuleNet.git
+cd RuleNet
+
+# Install dependencies
+pip install torch scikit-learn pandas numpy matplotlib imbalanced-learn kagglehub
+
+🚀 Quick Start
+
+from rulenet import RuleNet, RuleEngine
+import torch
+
+# Initialize model
+input_dim = 5  # Number of features
+hidden_dim = 128
+model = RuleNet(input_dim, hidden_dim, output_dim=1)
+
+# Define rules
+rules = [
+    lambda x: x[:, 0] > 1.0,  # High glucose
+    lambda x: x[:, 2] > 1.5   # Obesity risk
+]
+
+# Train and evaluate
+model.fit(X_train, y_train, rules=rules)
+accuracy, f1, coverage = model.evaluate(X_test, y_test)
+
+📁 Project Structure
+
+RuleNet/
+├── notebooks/
+│   └── Northern_Lights_Deep_Learning.ipynb  # Main experiments
+├── src/
+│   ├── models/
+│   │   ├── rulenet.py          # RuleNet implementation
+│   │   ├── mlp.py              # MLP baseline
+│   │   └── cnn.py              # CNN baseline
+│   ├── data/
+│   │   ├── preprocessing.py    # Data handling utilities
+│   │   └── datasets.py         # Dataset loaders
+│   └── utils/
+│       ├── metrics.py          # Evaluation metrics
+│       └── visualization.py    # Plotting utilities
+├── data/                       # Dataset storage
+├── results/                    # Experimental results
+└── README.md
+
+🗂️ Datasets
+
+MIMIC-III (Healthcare)
+
+Source: PhysioNet (requires access approval)
+Features: Lab values, patient demographics, vital signs
+Task: Diabetes prediction
+Preprocessing: Synthetic augmentation for class balancing
+Fraud-D (Financial)
+
+Source: Kaggle (public)
+Features: Transaction amount, balance changes, merchant info
+Task: Fraud detection
+Preprocessing: Standard scaling, SMOTE for imbalance
+
+
+🔬 Experiments
+
+Run the main notebook to reproduce experiments:
+
+jupyter notebook notebooks/Northern_Lights_Deep_Learning.ipynb
+
+Available Models
+
+RuleNet: Our proposed rule-augmented architecture
+MLP: Multi-layer perceptron baseline
+CNN: Convolutional neural network (adapted for tabular data)
+DeepProbLog: Neuro-symbolic baseline
+KGReasoner: Knowledge graph reasoning baseline
+
+
+📈 Results Visualization
+
+The notebook includes comprehensive visualization:
+
+Rule coverage across models
+Performance metrics comparison
+Inference time analysis
+Ablation studies
 
 
 🎯 Key Findings
 
-
-✅ Feasibility demonstrated: Joint learning is possible even under constrained resources
-
-✅ Geometric fidelity: Chamfer Distance improved by ~50% compared to sequential baseline
-
-⚠️ Denoising challenge: Modest PSNR/SSIM due to synthetic data limitations
-
-💡 Clinical potential: Coarse 3D previews achievable from noisy single images
+Improved Trustworthiness: 100% rule coverage ensures predictions align with domain knowledge
+Maintained Performance: Slight accuracy improvement over pure DNN approaches
+Computational Efficiency: Faster inference than CNN baselines
+Explainability: Gradient-based feature importance and rule satisfaction scores
 
 
+📚 Citation
 
+If you use RuleNet in your research, please cite:
 
-🔮 Future Work
-
-Real-data validation on complete LIDC-IDRI dataset
-Efficiency benchmarking against sequential pipelines
-Advanced architectures (diffusion models, transformers)
-Multi-modal extension (CT, MRI, X-ray)
-Clinical workflow integration
-
-📝 Citation
-
-If you use this work in your research, please cite:
-
-bibtex
-@article{anonymous2024joint,
-  title={Joint Denoising and 3D Point Cloud Reconstruction from Single Medical Images},
-  author={Farjana Yesmin and Nusrat Shirmin},
-  journal={Preprint},
+@article{rulenet2024,
+  title={Rule-Augmented Neural Networks for Trustworthy Decision-Making},
+  author={Farjana Yesmin and Nusrat shirmin},
+  journal={Conference on Neural Information Processing Systems},
   year={2024}
 }
 
-👥 Contributing
 
-We welcome contributions! Please feel free to submit issues, feature requests, or pull requests.
+🤝 Contributing
+
+We welcome contributions! Please see our Contributing Guidelines for details.
 
 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-🙏 Acknowledgments
+🙋‍♂️ Support
 
-Google Colab for computational resources
-LIDC-IDRI dataset providers
-The open-source medical imaging community
+For questions and support:
 
-Note: This is a proof-of-concept implementation. Results may vary with different datasets and hardware configurations.
+Open an issue on GitHub
+Contact: farjanayesmin76@gmail.com
+
+
+🏆 Acknowledgments
+
+MIMIC-III dataset providers (PhysioNet)
+Fraud-D dataset contributors (Kaggle)
+Neuro-symbolic AI research community
+RuleNet: Bridging the gap between neural performance and symbolic trustworthiness in AI systems.
+
+
