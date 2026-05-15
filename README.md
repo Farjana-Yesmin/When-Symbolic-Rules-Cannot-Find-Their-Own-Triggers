@@ -169,7 +169,7 @@ verified rather than assumed.**
 ## Citation
 
 ```bibtex
-@inproceedings{yesmin et al 2026rulenet,
+@inproceedings{yesmin et al 2026 When Symbolic Rules Cannot Find Their Own Triggers,
   title  = {When Symbolic Rules Cannot Find Their Own Triggers:
             An Epistemic Diagnosis of Predicate Grounding Collapse
             in Neuro-Symbolic Fraud Detection},
