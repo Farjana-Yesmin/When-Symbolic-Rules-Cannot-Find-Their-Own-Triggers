@@ -303,16 +303,14 @@ config = {
 
 ```
 .
-├── rulenet.ipynb               # Full experiment notebook
-├── README.md                   # This file
-├── main.tex                    # Camera-ready paper (EIML@ICML 2026)
-├── references.bib              # Bibliography
-├── feature_importance.png      # Gradient saliency figure
-├── lambda_sensitivity.png      # λ grid sensitivity figure
-├── main_results.png            # Main comparison figure
-├── rule_count_ablation.png     # Rule count ablation figure
-├── rule_satisfaction_evolution.png  # Conjunction evolution figure
-└── LICENSE                     # Apache 2.0
+├── when-symbolic-rules-cannot-find-their-own-triggers.ipynb  # Full experiment notebook
+├── README.md                        # This file
+├── feature_importance.eps/.png      # Gradient saliency figure
+├── lambda_sensitivity.eps/.png      # λ grid sensitivity figure
+├── main_results.eps/.png            # Main comparison figure
+├── rule_count_ablation.eps/.png     # Rule count ablation figure
+├── rule_satisfaction_evolution.eps/.png  # Conjunction evolution figure
+└── LICENSE                          # Apache 2.0
 ```
 
 ---
